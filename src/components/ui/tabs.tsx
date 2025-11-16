@@ -50,18 +50,60 @@ function TabsTrigger({
   );
 }
 
-function TabsContent({
-  className,
-  ...props
-}: React.ComponentProps<typeof TabsPrimitive.Content>) {
+const TabsContent = React.forwardRef<
+  React.ElementRef<typeof TabsPrimitive.Content>,
+  React.ComponentPropsWithoutRef<typeof TabsPrimitive.Content>
+>(({ className, forceMount, ...props }, ref) => {
+  const internalRef = React.useRef<HTMLDivElement>(null);
+
+  React.useImperativeHandle(ref, () => internalRef.current!);
+
+  React.useEffect(() => {
+    if (!forceMount || !internalRef.current) return;
+
+    const element = internalRef.current;
+
+    // Set initial state
+    const updateVisibility = () => {
+      const state = element.getAttribute('data-state');
+      if (state === 'inactive') {
+        element.style.display = 'none';
+      } else {
+        element.style.display = '';
+      }
+    };
+
+    // Update on mount
+    updateVisibility();
+
+    // Watch for attribute changes
+    const observer = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        if (mutation.type === 'attributes' && mutation.attributeName === 'data-state') {
+          updateVisibility();
+        }
+      });
+    });
+
+    observer.observe(element, {
+      attributes: true,
+      attributeFilter: ['data-state'],
+    });
+
+    return () => observer.disconnect();
+  }, [forceMount]);
+
   return (
     <TabsPrimitive.Content
+      ref={internalRef}
       data-slot="tabs-content"
-      className={cn("flex-1 outline-none data-[state=inactive]:hidden", className)}
-      forceMount
+      className={cn("flex-1 outline-none", className)}
+      forceMount={forceMount}
       {...props}
     />
   );
-}
+});
+
+TabsContent.displayName = "TabsContent";
 
 export { Tabs, TabsList, TabsTrigger, TabsContent };

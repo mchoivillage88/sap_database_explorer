@@ -151,7 +151,7 @@ export function TableDetails({ table, allTables, onSelectTable }: TableDetailsPr
               </div>
             </div>
 
-            <TabsContent value="fields" className="m-0">
+            <TabsContent value="fields" className="m-0" forceMount>
               <div className="overflow-x-auto">
                 <table className="w-full">
                   <thead className="bg-gray-50 border-b border-gray-200">
@@ -426,7 +426,7 @@ export function TableDetails({ table, allTables, onSelectTable }: TableDetailsPr
               </div>
             </TabsContent>
 
-            <TabsContent value="samples" className="m-0">
+            <TabsContent value="samples" className="m-0" forceMount>
               {sampleRecords[table.name] && sampleRecords[table.name].length > 0 ? (
                 <>
                   <div className="overflow-x-auto">
@@ -533,7 +533,7 @@ export function TableDetails({ table, allTables, onSelectTable }: TableDetailsPr
               )}
             </TabsContent>
 
-            <TabsContent value="context" className="m-0">
+            <TabsContent value="context" className="m-0" forceMount>
               {businessContextData[table.name] ? (
                 <div className="p-6 space-y-6">
                   {/* SAP Modules */}
