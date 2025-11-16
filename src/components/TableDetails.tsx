@@ -1,16 +1,18 @@
 import { Database, Key, Link, Layers, BookOpen, Users, GitBranch, Lightbulb, Code } from 'lucide-react';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, lazy, Suspense } from 'react';
 import { SAPTable } from '../types/sap-tables';
 import { Badge } from './ui/badge';
 import { Checkbox } from './ui/checkbox';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from './ui/tooltip';
-import { ERDiagram } from './ERDiagram';
 import { getSizeInfo } from '../utils/size-utils';
 import { sampleRecords } from '../data/sample-records-data';
 import { getFieldFormatExample } from '../utils/field-formats';
 import { businessContextData } from '../data/business-context';
 import { commonQueries } from '../data/common-queries';
+
+// Lazy load ERDiagram component for better performance
+const ERDiagram = lazy(() => import('./ERDiagram').then(module => ({ default: module.ERDiagram })));
 
 interface TableDetailsProps {
   table: SAPTable;
@@ -702,7 +704,16 @@ export function TableDetails({ table, allTables, onSelectTable }: TableDetailsPr
         )}
 
         {/* ERD Diagram */}
-        <ERDiagram table={table} relatedTables={relatedTables} allTables={allTables} onSelectTable={onSelectTable} />
+        <Suspense fallback={
+          <div className="bg-gray-50 border border-gray-200 rounded-lg p-8">
+            <div className="flex items-center justify-center">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mr-3"></div>
+              <span className="text-gray-500">Loading diagram...</span>
+            </div>
+          </div>
+        }>
+          <ERDiagram table={table} relatedTables={relatedTables} allTables={allTables} onSelectTable={onSelectTable} />
+        </Suspense>
 
         {/* Additional Info */}
         <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
