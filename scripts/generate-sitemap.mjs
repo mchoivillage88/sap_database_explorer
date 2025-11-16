@@ -6,8 +6,9 @@ const currentDate = new Date().toISOString().split('T')[0];
 // Read the data file and extract table names
 const dataFile = readFileSync('src/data/sap-tables-data.ts', 'utf-8');
 
-// Extract table names using regex - looking for objects with name property at the start
-const tableMatches = dataFile.match(/{\s*name:\s*'([^']+)',\s*description:/g);
+// Extract table names - looking for main table objects (not field objects)
+// Pattern: starts with 2 spaces, {, newline, 4 spaces, name: 'TABLENAME', newline, description:
+const tableMatches = dataFile.match(/^\s{2}\{\s*\n\s{4}name:\s*'([^']+)',\s*\n\s{4}description:\s*'([^']+)',\s*\n\s{4}detailedDescription:/gm);
 const tableNames = tableMatches ? tableMatches.map(match => {
   const nameMatch = match.match(/name:\s*'([^']+)'/);
   return nameMatch ? nameMatch[1] : null;
