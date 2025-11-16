@@ -1,12 +1,15 @@
 
 import { createRoot } from "react-dom/client";
-import { BrowserRouter } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import App from "./App.tsx";
 import "./index.css";
 
 createRoot(document.getElementById("root")!).render(
-  <BrowserRouter>
-    <App />
+  <BrowserRouter basename="/sap_database_explorer">
+    <Routes>
+      <Route path="/" element={<App />} />
+      <Route path="/:tableName" element={<App />} />
+    </Routes>
   </BrowserRouter>
 );
   

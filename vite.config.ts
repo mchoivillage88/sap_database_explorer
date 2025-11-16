@@ -4,6 +4,7 @@
   import path from 'path';
 
   export default defineConfig({
+    base: '/sap_database_explorer/',
     plugins: [react()],
     resolve: {
       extensions: ['.js', '.jsx', '.ts', '.tsx', '.json'],
@@ -56,5 +57,10 @@
     server: {
       port: 3001,
       open: true,
+      historyApiFallback: true,
+    },
+    preview: {
+      port: 3001,
+      historyApiFallback: true,
     },
   });
