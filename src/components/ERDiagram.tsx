@@ -1,6 +1,7 @@
 import { SAPTable, Relationship } from '../types/sap-tables';
 import { Badge } from './ui/badge';
 import { getSizeInfo } from '../utils/size-utils';
+import { useIsMobile } from './ui/use-mobile';
 
 interface ERDiagramProps {
   table: SAPTable;
@@ -10,6 +11,7 @@ interface ERDiagramProps {
 }
 
 export function ERDiagram({ table, relatedTables, allTables, onSelectTable }: ERDiagramProps) {
+  const isMobile = useIsMobile();
   const centerX = 400;
   const centerY = 250;
   const radius = 210; // Spacing between center and related tables
@@ -181,7 +183,12 @@ export function ERDiagram({ table, relatedTables, allTables, onSelectTable }: ER
         <svg
           viewBox="0 0 800 500"
           className="mx-auto w-full h-auto"
-          style={{ maxWidth: '100%', minHeight: '300px' }}
+          style={{
+            maxWidth: '100%',
+            minHeight: isMobile ? '500px' : '300px',
+            transform: isMobile ? 'scale(1.4)' : 'scale(1)',
+            transformOrigin: 'center top'
+          }}
         >
           {/* Draw lines and relationship notation */}
           {table.relationships.map((rel, index) => {
