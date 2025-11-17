@@ -697,7 +697,10 @@ export function TableDetails({ table, allTables, onSelectTable }: TableDetailsPr
                       <tr>
                         <th className="text-left p-2 text-xs text-gray-600">Type</th>
                         <th className="text-left p-2 text-xs text-gray-600">Field Name</th>
+                        <th className="text-left p-2 text-xs text-gray-600">Description</th>
                         <th className="text-left p-2 text-xs text-gray-600">Data Type</th>
+                        <th className="text-left p-2 text-xs text-gray-600">Length</th>
+                        <th className="text-left p-2 text-xs text-gray-600">Properties</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -706,7 +709,7 @@ export function TableDetails({ table, allTables, onSelectTable }: TableDetailsPr
                           {groupedFields.primaryKeys.length > 0 && (
                             <>
                               <tr className="bg-amber-100">
-                                <td colSpan={3} className="p-2">
+                                <td colSpan={6} className="p-2">
                                   <div className="flex items-center gap-2">
                                     <Key className="size-4 text-amber-700" />
                                     <span className="text-xs text-amber-900 font-medium">Primary Keys ({groupedFields.primaryKeys.length})</span>
@@ -717,7 +720,22 @@ export function TableDetails({ table, allTables, onSelectTable }: TableDetailsPr
                                 <tr key={`pk-${field.name}-${index}`} className="bg-amber-50 border-b border-amber-100">
                                   <td className="p-2">{getFieldIcon(field)}</td>
                                   <td className="p-2"><code className="text-xs">{field.name}</code></td>
+                                  <td className="p-2"><span className="text-xs text-gray-700">{field.description}</span></td>
                                   <td className="p-2"><span className="text-xs">{field.type}</span></td>
+                                  <td className="p-2"><span className="text-xs text-gray-600">{field.length || '-'}</span></td>
+                                  <td className="p-2">
+                                    <div className="flex flex-wrap gap-1">
+                                      {field.isPrimaryKey && (
+                                        <Badge className="bg-amber-100 text-amber-800 hover:bg-amber-100 text-xs">PK</Badge>
+                                      )}
+                                      {field.isForeignKey && (
+                                        <Badge className="bg-purple-100 text-purple-800 hover:bg-purple-100 text-xs">FK</Badge>
+                                      )}
+                                      {field.isCompositeIndex && (
+                                        <Badge className="bg-blue-100 text-blue-800 hover:bg-blue-100 text-xs">IDX</Badge>
+                                      )}
+                                    </div>
+                                  </td>
                                 </tr>
                               ))}
                             </>
@@ -725,7 +743,7 @@ export function TableDetails({ table, allTables, onSelectTable }: TableDetailsPr
                           {groupedFields.foreignKeys.length > 0 && (
                             <>
                               <tr className="bg-purple-100">
-                                <td colSpan={3} className="p-2">
+                                <td colSpan={6} className="p-2">
                                   <div className="flex items-center gap-2">
                                     <Link className="size-4 text-purple-700" />
                                     <span className="text-xs text-purple-900 font-medium">Foreign Keys ({groupedFields.foreignKeys.length})</span>
@@ -736,7 +754,22 @@ export function TableDetails({ table, allTables, onSelectTable }: TableDetailsPr
                                 <tr key={`fk-${field.name}-${index}`} className="bg-purple-50 border-b border-purple-100">
                                   <td className="p-2">{getFieldIcon(field)}</td>
                                   <td className="p-2"><code className="text-xs">{field.name}</code></td>
+                                  <td className="p-2"><span className="text-xs text-gray-700">{field.description}</span></td>
                                   <td className="p-2"><span className="text-xs">{field.type}</span></td>
+                                  <td className="p-2"><span className="text-xs text-gray-600">{field.length || '-'}</span></td>
+                                  <td className="p-2">
+                                    <div className="flex flex-wrap gap-1">
+                                      {field.isPrimaryKey && (
+                                        <Badge className="bg-amber-100 text-amber-800 hover:bg-amber-100 text-xs">PK</Badge>
+                                      )}
+                                      {field.isForeignKey && (
+                                        <Badge className="bg-purple-100 text-purple-800 hover:bg-purple-100 text-xs">FK</Badge>
+                                      )}
+                                      {field.isCompositeIndex && (
+                                        <Badge className="bg-blue-100 text-blue-800 hover:bg-blue-100 text-xs">IDX</Badge>
+                                      )}
+                                    </div>
+                                  </td>
                                 </tr>
                               ))}
                             </>
@@ -744,7 +777,7 @@ export function TableDetails({ table, allTables, onSelectTable }: TableDetailsPr
                           {groupedFields.other.length > 0 && (
                             <>
                               <tr className="bg-gray-100">
-                                <td colSpan={3} className="p-2">
+                                <td colSpan={6} className="p-2">
                                   <div className="flex items-center gap-2">
                                     <Database className="size-4 text-gray-700" />
                                     <span className="text-xs text-gray-900 font-medium">Other Fields ({groupedFields.other.length})</span>
@@ -755,7 +788,22 @@ export function TableDetails({ table, allTables, onSelectTable }: TableDetailsPr
                                 <tr key={`other-${field.name}-${index}`} className="bg-white border-b border-gray-100">
                                   <td className="p-2">{getFieldIcon(field)}</td>
                                   <td className="p-2"><code className="text-xs">{field.name}</code></td>
+                                  <td className="p-2"><span className="text-xs text-gray-700">{field.description}</span></td>
                                   <td className="p-2"><span className="text-xs">{field.type}</span></td>
+                                  <td className="p-2"><span className="text-xs text-gray-600">{field.length || '-'}</span></td>
+                                  <td className="p-2">
+                                    <div className="flex flex-wrap gap-1">
+                                      {field.isPrimaryKey && (
+                                        <Badge className="bg-amber-100 text-amber-800 hover:bg-amber-100 text-xs">PK</Badge>
+                                      )}
+                                      {field.isForeignKey && (
+                                        <Badge className="bg-purple-100 text-purple-800 hover:bg-purple-100 text-xs">FK</Badge>
+                                      )}
+                                      {field.isCompositeIndex && (
+                                        <Badge className="bg-blue-100 text-blue-800 hover:bg-blue-100 text-xs">IDX</Badge>
+                                      )}
+                                    </div>
+                                  </td>
                                 </tr>
                               ))}
                             </>
@@ -766,7 +814,22 @@ export function TableDetails({ table, allTables, onSelectTable }: TableDetailsPr
                           <tr key={`field-${field.name}-${index}`} className="border-b border-gray-100">
                             <td className="p-2">{getFieldIcon(field)}</td>
                             <td className="p-2"><code className="text-xs">{field.name}</code></td>
+                            <td className="p-2"><span className="text-xs text-gray-700">{field.description}</span></td>
                             <td className="p-2"><span className="text-xs">{field.type}</span></td>
+                            <td className="p-2"><span className="text-xs text-gray-600">{field.length || '-'}</span></td>
+                            <td className="p-2">
+                              <div className="flex flex-wrap gap-1">
+                                {field.isPrimaryKey && (
+                                  <Badge className="bg-amber-100 text-amber-800 hover:bg-amber-100 text-xs">PK</Badge>
+                                )}
+                                {field.isForeignKey && (
+                                  <Badge className="bg-purple-100 text-purple-800 hover:bg-purple-100 text-xs">FK</Badge>
+                                )}
+                                {field.isCompositeIndex && (
+                                  <Badge className="bg-blue-100 text-blue-800 hover:bg-blue-100 text-xs">IDX</Badge>
+                                )}
+                              </div>
+                            </td>
                           </tr>
                         ))
                       )}
