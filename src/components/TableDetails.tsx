@@ -78,22 +78,23 @@ export function TableDetails({ table, allTables, onSelectTable }: TableDetailsPr
   return (
     <div className="h-full overflow-y-auto bg-white" ref={scrollContainerRef}>
       {/* Header */}
-      <div className="sticky top-0 bg-white border-b border-gray-200 p-6 shadow-sm z-10">
+      <div className="sticky top-0 bg-white border-b border-gray-200 p-4 md:p-6 shadow-sm z-10">
         <div className="flex items-start justify-between">
-          <div className="flex-1">
-            <h1 className="text-blue-600">{table.name}</h1>
-            <p className="text-gray-600 mt-2">{table.description}</p>
+          <div className="flex-1 min-w-0">
+            <h1 className="text-xl md:text-3xl text-blue-600 truncate">{table.name}</h1>
+            <p className="text-sm md:text-base text-gray-600 mt-2 line-clamp-2 md:line-clamp-none">{table.description}</p>
             <div className="mt-3 flex items-center gap-2 flex-wrap">
-              <Badge variant="secondary">{table.category}</Badge>
+              <Badge variant="secondary" className="text-xs md:text-sm">{table.category}</Badge>
               {table.typicalRecordCount && (
                 <>
-                  <Badge 
-                    className={`${getSizeInfo(table.typicalRecordCount).color} text-white hover:${getSizeInfo(table.typicalRecordCount).color}`}
+                  <Badge
+                    className={`${getSizeInfo(table.typicalRecordCount).color} text-white hover:${getSizeInfo(table.typicalRecordCount).color} text-xs md:text-sm`}
                   >
                     {getSizeInfo(table.typicalRecordCount).label}
                   </Badge>
-                  <Badge variant="outline" className="text-gray-600">
-                    {table.typicalRecordCount} records
+                  <Badge variant="outline" className="text-gray-600 text-xs md:text-sm">
+                    <span className="hidden sm:inline">{table.typicalRecordCount} records</span>
+                    <span className="sm:hidden">{table.typicalRecordCount}</span>
                   </Badge>
                 </>
               )}
@@ -109,29 +110,39 @@ export function TableDetails({ table, allTables, onSelectTable }: TableDetailsPr
         </div>
       </div>
 
-      <div className="p-6 space-y-6">
+      <div className="p-4 md:p-6 space-y-4 md:space-y-6">
         {/* Fields and Sample Records Section with Tabs */}
         <div className="bg-white rounded-lg border border-gray-200">
           <Tabs defaultValue="fields" className="w-full">
-            <div className="p-4 border-b border-gray-200 bg-gray-50">
-              <div className="flex items-center justify-between">
-                <TabsList>
-                  <TabsTrigger value="fields">Table Fields</TabsTrigger>
-                  <TabsTrigger value="samples">Sample Records</TabsTrigger>
-                  <TabsTrigger value="context">Business Context</TabsTrigger>
+            <div className="p-3 md:p-4 border-b border-gray-200 bg-gray-50">
+              <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+                <TabsList className="w-full md:w-auto">
+                  <TabsTrigger value="fields" className="text-xs md:text-sm flex-1 md:flex-none">
+                    <span className="hidden sm:inline">Table Fields</span>
+                    <span className="sm:hidden">Fields</span>
+                  </TabsTrigger>
+                  <TabsTrigger value="samples" className="text-xs md:text-sm flex-1 md:flex-none">
+                    <span className="hidden sm:inline">Sample Records</span>
+                    <span className="sm:hidden">Samples</span>
+                  </TabsTrigger>
+                  <TabsTrigger value="context" className="text-xs md:text-sm flex-1 md:flex-none">
+                    <span className="hidden sm:inline">Business Context</span>
+                    <span className="sm:hidden">Context</span>
+                  </TabsTrigger>
                 </TabsList>
-                <div className="flex items-center gap-4">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 md:gap-4">
                   <div className="flex items-center gap-2">
                     <Checkbox
                       id="most-important-fields"
                       checked={showMostImportantFieldsOnly}
                       onCheckedChange={setShowMostImportantFieldsOnly}
                     />
-                    <label 
-                      htmlFor="most-important-fields" 
-                      className="text-sm text-gray-700 cursor-pointer select-none"
+                    <label
+                      htmlFor="most-important-fields"
+                      className="text-xs md:text-sm text-gray-700 cursor-pointer select-none"
                     >
-                      Show most important fields only
+                      <span className="hidden sm:inline">Show most important fields only</span>
+                      <span className="sm:hidden">Most important only</span>
                     </label>
                   </div>
                   <div className="flex items-center gap-2">
@@ -140,9 +151,9 @@ export function TableDetails({ table, allTables, onSelectTable }: TableDetailsPr
                       checked={groupFieldsByType}
                       onCheckedChange={setGroupFieldsByType}
                     />
-                    <label 
-                      htmlFor="group-fields" 
-                      className="text-sm text-gray-700 cursor-pointer select-none"
+                    <label
+                      htmlFor="group-fields"
+                      className="text-xs md:text-sm text-gray-700 cursor-pointer select-none"
                     >
                       Group by field type
                     </label>
@@ -153,15 +164,15 @@ export function TableDetails({ table, allTables, onSelectTable }: TableDetailsPr
 
             <TabsContent value="fields" className="m-0" forceMount>
               <div className="overflow-x-auto">
-                <table className="w-full">
+                <table className="w-full text-sm md:text-base">
                   <thead className="bg-gray-50 border-b border-gray-200">
                     <tr>
-                      <th className="text-left p-3 text-sm text-gray-600">Type</th>
-                      <th className="text-left p-3 text-sm text-gray-600">Field Name</th>
-                      <th className="text-left p-3 text-sm text-gray-600">Description</th>
-                      <th className="text-left p-3 text-sm text-gray-600">Data Type</th>
-                      <th className="text-left p-3 text-sm text-gray-600">Length</th>
-                      <th className="text-left p-3 text-sm text-gray-600">Properties</th>
+                      <th className="text-left p-2 md:p-3 text-xs md:text-sm text-gray-600">Type</th>
+                      <th className="text-left p-2 md:p-3 text-xs md:text-sm text-gray-600">Field Name</th>
+                      <th className="text-left p-2 md:p-3 text-xs md:text-sm text-gray-600 hidden lg:table-cell">Description</th>
+                      <th className="text-left p-2 md:p-3 text-xs md:text-sm text-gray-600">Data Type</th>
+                      <th className="text-left p-2 md:p-3 text-xs md:text-sm text-gray-600 hidden sm:table-cell">Length</th>
+                      <th className="text-left p-2 md:p-3 text-xs md:text-sm text-gray-600 hidden md:table-cell">Properties</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -183,35 +194,35 @@ export function TableDetails({ table, allTables, onSelectTable }: TableDetailsPr
                                 key={`pk-${field.name}-${index}`}
                                 className={`${getFieldRowClass(field)} transition-colors`}
                               >
-                                <td className="p-3">
+                                <td className="p-2 md:p-3">
                                   <div className="flex items-center justify-center">
                                     {getFieldIcon(field)}
                                   </div>
                                 </td>
-                                <td className="p-3">
-                                  <code className="text-sm bg-gray-100 px-2 py-1 rounded">
+                                <td className="p-2 md:p-3">
+                                  <code className="text-xs md:text-sm bg-gray-100 px-2 py-1 rounded break-all">
                                     {field.name}
                                   </code>
                                 </td>
-                                <td className="p-3 text-gray-700">{field.description}</td>
-                                <td className="p-3">
-                                  <span className="text-sm text-gray-600">{field.type}</span>
+                                <td className="p-2 md:p-3 text-xs md:text-sm text-gray-700 hidden lg:table-cell">{field.description}</td>
+                                <td className="p-2 md:p-3">
+                                  <span className="text-xs md:text-sm text-gray-600">{field.type}</span>
                                 </td>
-                                <td className="p-3 text-gray-600">{field.length || '-'}</td>
-                                <td className="p-3">
+                                <td className="p-2 md:p-3 text-xs md:text-sm text-gray-600 hidden sm:table-cell">{field.length || '-'}</td>
+                                <td className="p-2 md:p-3 hidden md:table-cell">
                                   <div className="flex flex-wrap gap-1">
                                     {field.isPrimaryKey && (
-                                      <Badge className="bg-amber-100 text-amber-800 hover:bg-amber-100">
+                                      <Badge className="bg-amber-100 text-amber-800 hover:bg-amber-100 text-xs">
                                         Primary Key
                                       </Badge>
                                     )}
                                     {field.isForeignKey && (
-                                      <Badge className="bg-purple-100 text-purple-800 hover:bg-purple-100">
+                                      <Badge className="bg-purple-100 text-purple-800 hover:bg-purple-100 text-xs">
                                         FK → {field.foreignKeyTable}
                                       </Badge>
                                     )}
                                     {field.isCompositeIndex && !field.isPrimaryKey && (
-                                      <Badge className="bg-blue-100 text-blue-800 hover:bg-blue-100">
+                                      <Badge className="bg-blue-100 text-blue-800 hover:bg-blue-100 text-xs">
                                         Composite Index
                                       </Badge>
                                     )}
@@ -238,30 +249,30 @@ export function TableDetails({ table, allTables, onSelectTable }: TableDetailsPr
                                 key={`fk-${field.name}-${index}`}
                                 className={`${getFieldRowClass(field)} transition-colors`}
                               >
-                                <td className="p-3">
+                                <td className="p-2 md:p-3">
                                   <div className="flex items-center justify-center">
                                     {getFieldIcon(field)}
                                   </div>
                                 </td>
-                                <td className="p-3">
-                                  <code className="text-sm bg-gray-100 px-2 py-1 rounded">
+                                <td className="p-2 md:p-3">
+                                  <code className="text-xs md:text-sm bg-gray-100 px-2 py-1 rounded break-all">
                                     {field.name}
                                   </code>
                                 </td>
-                                <td className="p-3 text-gray-700">{field.description}</td>
-                                <td className="p-3">
-                                  <span className="text-sm text-gray-600">{field.type}</span>
+                                <td className="p-2 md:p-3 text-xs md:text-sm text-gray-700 hidden lg:table-cell">{field.description}</td>
+                                <td className="p-2 md:p-3">
+                                  <span className="text-xs md:text-sm text-gray-600">{field.type}</span>
                                 </td>
-                                <td className="p-3 text-gray-600">{field.length || '-'}</td>
-                                <td className="p-3">
+                                <td className="p-2 md:p-3 text-xs md:text-sm text-gray-600 hidden sm:table-cell">{field.length || '-'}</td>
+                                <td className="p-2 md:p-3 hidden md:table-cell">
                                   <div className="flex flex-wrap gap-1">
                                     {field.isForeignKey && (
-                                      <Badge className="bg-purple-100 text-purple-800 hover:bg-purple-100">
+                                      <Badge className="bg-purple-100 text-purple-800 hover:bg-purple-100 text-xs">
                                         FK → {field.foreignKeyTable}
                                       </Badge>
                                     )}
                                     {field.isCompositeIndex && !field.isPrimaryKey && (
-                                      <Badge className="bg-blue-100 text-blue-800 hover:bg-blue-100">
+                                      <Badge className="bg-blue-100 text-blue-800 hover:bg-blue-100 text-xs">
                                         Composite Index
                                       </Badge>
                                     )}
@@ -288,25 +299,25 @@ export function TableDetails({ table, allTables, onSelectTable }: TableDetailsPr
                                 key={`idx-${field.name}-${index}`}
                                 className={`${getFieldRowClass(field)} transition-colors`}
                               >
-                                <td className="p-3">
+                                <td className="p-2 md:p-3">
                                   <div className="flex items-center justify-center">
                                     {getFieldIcon(field)}
                                   </div>
                                 </td>
-                                <td className="p-3">
-                                  <code className="text-sm bg-gray-100 px-2 py-1 rounded">
+                                <td className="p-2 md:p-3">
+                                  <code className="text-xs md:text-sm bg-gray-100 px-2 py-1 rounded break-all">
                                     {field.name}
                                   </code>
                                 </td>
-                                <td className="p-3 text-gray-700">{field.description}</td>
-                                <td className="p-3">
-                                  <span className="text-sm text-gray-600">{field.type}</span>
+                                <td className="p-2 md:p-3 text-xs md:text-sm text-gray-700 hidden lg:table-cell">{field.description}</td>
+                                <td className="p-2 md:p-3">
+                                  <span className="text-xs md:text-sm text-gray-600">{field.type}</span>
                                 </td>
-                                <td className="p-3 text-gray-600">{field.length || '-'}</td>
-                                <td className="p-3">
+                                <td className="p-2 md:p-3 text-xs md:text-sm text-gray-600 hidden sm:table-cell">{field.length || '-'}</td>
+                                <td className="p-2 md:p-3 hidden md:table-cell">
                                   <div className="flex flex-wrap gap-1">
                                     {field.isCompositeIndex && (
-                                      <Badge className="bg-blue-100 text-blue-800 hover:bg-blue-100">
+                                      <Badge className="bg-blue-100 text-blue-800 hover:bg-blue-100 text-xs">
                                         Composite Index
                                       </Badge>
                                     )}
@@ -333,22 +344,22 @@ export function TableDetails({ table, allTables, onSelectTable }: TableDetailsPr
                                 key={`other-${field.name}-${index}`}
                                 className={`${getFieldRowClass(field)} transition-colors`}
                               >
-                                <td className="p-3">
+                                <td className="p-2 md:p-3">
                                   <div className="flex items-center justify-center">
                                     {getFieldIcon(field)}
                                   </div>
                                 </td>
-                                <td className="p-3">
-                                  <code className="text-sm bg-gray-100 px-2 py-1 rounded">
+                                <td className="p-2 md:p-3">
+                                  <code className="text-xs md:text-sm bg-gray-100 px-2 py-1 rounded break-all">
                                     {field.name}
                                   </code>
                                 </td>
-                                <td className="p-3 text-gray-700">{field.description}</td>
-                                <td className="p-3">
-                                  <span className="text-sm text-gray-600">{field.type}</span>
+                                <td className="p-2 md:p-3 text-xs md:text-sm text-gray-700 hidden lg:table-cell">{field.description}</td>
+                                <td className="p-2 md:p-3">
+                                  <span className="text-xs md:text-sm text-gray-600">{field.type}</span>
                                 </td>
-                                <td className="p-3 text-gray-600">{field.length || '-'}</td>
-                                <td className="p-3">
+                                <td className="p-2 md:p-3 text-xs md:text-sm text-gray-600 hidden sm:table-cell">{field.length || '-'}</td>
+                                <td className="p-2 md:p-3 hidden md:table-cell">
                                   <div className="flex flex-wrap gap-1">
                                     {/* Other fields typically don't have special badges */}
                                   </div>

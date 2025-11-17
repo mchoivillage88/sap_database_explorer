@@ -4,8 +4,9 @@ import { TableList } from './components/TableList';
 import { GlossaryModal } from './components/GlossaryModal';
 import { sapTables } from './data/sap-tables-data';
 import { businessContextData } from './data/business-context';
-import { Database, BookOpen, Github } from 'lucide-react';
+import { Database, BookOpen, Github, Menu, X } from 'lucide-react';
 import { Button } from './components/ui/button';
+import { useIsMobile } from './components/ui/use-mobile';
 
 // Lazy load the TableDetails component for better performance
 const TableDetails = lazy(() => import('./components/TableDetails').then(module => ({ default: module.TableDetails })));
@@ -16,6 +17,15 @@ export default function App() {
   const selectedTableName = tableName || null;
   const [showMostImportantOnly, setShowMostImportantOnly] = useState(true);
   const [isGlossaryOpen, setIsGlossaryOpen] = useState(false);
+  const isMobile = useIsMobile();
+  const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
+
+  // Auto-open sidebar on mobile when no table is selected
+  useEffect(() => {
+    if (isMobile && !selectedTableName) {
+      setIsMobileSidebarOpen(true);
+    }
+  }, [isMobile, selectedTableName]);
 
   // Update document title, meta description, canonical URL, and structured data
   useEffect(() => {
@@ -140,10 +150,28 @@ export default function App() {
   const setSelectedTableName = (tableName: string | null) => {
     if (tableName) {
       navigate(`/${encodeURIComponent(tableName)}`);
+      // Close mobile sidebar when a table is selected
+      if (isMobile) {
+        setIsMobileSidebarOpen(false);
+      }
     } else {
       navigate('/');
     }
   };
+
+  // Close mobile sidebar when clicking outside or on escape
+  useEffect(() => {
+    if (!isMobile || !isMobileSidebarOpen) return;
+
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setIsMobileSidebarOpen(false);
+      }
+    };
+
+    document.addEventListener('keydown', handleEscape);
+    return () => document.removeEventListener('keydown', handleEscape);
+  }, [isMobile, isMobileSidebarOpen]);
 
   // Filter tables based on tier
   const filteredTables = showMostImportantOnly 
@@ -158,10 +186,22 @@ export default function App() {
       <header className="bg-gradient-to-r from-blue-600 to-blue-700 text-white p-4 shadow-lg">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <Database className="size-8" />
-            <div>
-              <h1 className="text-white">SAP S/4HANA Database Explorer</h1>
-              <p className="text-sm text-blue-100 mt-1">
+            {/* Mobile Menu Toggle */}
+            {isMobile && (
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => setIsMobileSidebarOpen(!isMobileSidebarOpen)}
+                className="text-white hover:bg-white/20 hover:text-white flex-shrink-0"
+                aria-label={isMobileSidebarOpen ? "Close menu" : "Open menu"}
+              >
+                {isMobileSidebarOpen ? <X className="size-6" /> : <Menu className="size-6" />}
+              </Button>
+            )}
+            <Database className="size-8 flex-shrink-0" />
+            <div className="min-w-0">
+              <h1 className="text-white text-base md:text-xl truncate">SAP S/4HANA Database Explorer</h1>
+              <p className="text-xs md:text-sm text-blue-100 mt-1 hidden sm:block">
                 Interactive guide to key SAP ERP database tables and their relationships
               </p>
             </div>
@@ -171,9 +211,11 @@ export default function App() {
               onClick={() => setIsGlossaryOpen(true)}
               variant="outline"
               className="bg-white/10 border-white/20 text-white hover:bg-white/20 hover:text-white"
+              title="SAP Glossary"
+              aria-label="SAP Glossary"
             >
-              <BookOpen className="size-4 mr-2" />
-              SAP Glossary
+              <BookOpen className="size-4 sm:mr-2" />
+              <span className="hidden sm:inline">SAP Glossary</span>
             </Button>
             <Button
               asChild
@@ -195,10 +237,36 @@ export default function App() {
         </div>
       </header>
 
+      {/* Mobile Overlay */}
+      {isMobile && isMobileSidebarOpen && (
+        <div
+          className="fixed inset-0 bg-black/50 z-40 md:hidden"
+          onClick={() => setIsMobileSidebarOpen(false)}
+          aria-hidden="true"
+        />
+      )}
+
       {/* Main Content */}
-      <div className="flex-1 flex overflow-hidden">
+      <div className="flex-1 flex overflow-hidden relative">
         {/* Left Panel - Table List */}
-        <div className="w-[368px] flex-shrink-0">
+        <aside
+          className="
+            h-full bg-white border-r border-gray-200
+            transform transition-transform duration-300 ease-in-out
+          "
+          style={{
+            position: isMobile ? 'fixed' : 'relative',
+            top: isMobile ? 0 : undefined,
+            bottom: isMobile ? 0 : undefined,
+            left: isMobile ? 0 : undefined,
+            zIndex: isMobile ? 50 : undefined,
+            width: isMobile ? '85vw' : '368px',
+            maxWidth: '368px',
+            boxShadow: isMobile ? '0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1)' : undefined,
+            transform: isMobile && !isMobileSidebarOpen ? 'translateX(-100%)' : 'translateX(0)',
+            flexShrink: isMobile ? undefined : 0
+          }}
+        >
           <TableList
             tables={filteredTables}
             selectedTable={selectedTableName}
@@ -206,10 +274,10 @@ export default function App() {
             showMostImportantOnly={showMostImportantOnly}
             onToggleMostImportant={setShowMostImportantOnly}
           />
-        </div>
+        </aside>
 
         {/* Right Panel - Table Details */}
-        <div className="flex-1 overflow-hidden">
+        <div className="flex-1 overflow-hidden w-full">
           {selectedTable ? (
             <Suspense fallback={
               <div className="h-full flex items-center justify-center bg-gray-50">
@@ -240,10 +308,10 @@ export default function App() {
 
       {/* Footer */}
       <footer className="bg-gray-50 border-t border-gray-200 py-3 px-4">
-        <div className="flex items-center justify-between text-sm text-gray-600">
-          <div className="flex items-center gap-4">
-            <span>© {new Date().getFullYear()} SAP Database Explorer</span>
-            <span className="text-gray-400">•</span>
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-2 text-xs sm:text-sm text-gray-600">
+          <div className="flex items-center gap-2 sm:gap-4">
+            <span className="text-center">© {new Date().getFullYear()} SAP Database Explorer</span>
+            <span className="text-gray-400 hidden sm:inline">•</span>
             <a
               href="https://github.com/mchoivillage88/sap_database_explorer"
               target="_blank"
@@ -251,10 +319,11 @@ export default function App() {
               className="text-blue-600 hover:text-blue-700 hover:underline flex items-center gap-1"
             >
               <Github className="size-4" />
-              View Source
+              <span className="hidden sm:inline">View Source</span>
+              <span className="sm:hidden">Source</span>
             </a>
           </div>
-          <div className="text-gray-500">
+          <div className="text-gray-500 text-center">
             Open Source • Contributions Welcome
           </div>
         </div>
