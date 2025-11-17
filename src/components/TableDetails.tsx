@@ -80,21 +80,26 @@ export function TableDetails({ table, allTables, onSelectTable }: TableDetailsPr
   return (
     <div className="h-full overflow-y-auto bg-white" ref={scrollContainerRef}>
       {/* Header - Compact on mobile */}
-      <div className="sticky top-0 bg-white border-b border-gray-200 p-4 md:p-6 shadow-sm z-10">
+      <div className="sticky top-0 bg-white border-b border-gray-200 p-2 md:p-6 shadow-sm z-10">
         <div className="flex items-start justify-between">
           <div className="flex-1 min-w-0">
-            <h1 className="text-xl md:text-3xl text-blue-600 truncate">{table.name}</h1>
-            <p className="text-sm md:text-base text-gray-600 mt-2 line-clamp-2 md:line-clamp-none">{table.description}</p>
-            <div className="mt-3 flex items-center gap-2 flex-wrap">
-              <Badge variant="secondary" className="text-xs md:text-sm">{table.category}</Badge>
+            {/* Mobile: Title and description on same line */}
+            <div className="flex md:block gap-2 items-center md:items-start">
+              <h1 className="text-lg md:text-3xl text-blue-600 flex-shrink-0">{table.name}</h1>
+              <span className="text-sm md:text-base text-gray-600 md:mt-2 truncate">
+                {table.description}
+              </span>
+            </div>
+            <div className="mt-1 md:mt-3 flex items-center gap-1 md:gap-2 flex-wrap">
+              <Badge variant="secondary" className="text-xs md:text-sm px-1.5 md:px-2.5 py-0 md:py-0.5">{table.category}</Badge>
               {table.typicalRecordCount && (
                 <>
                   <Badge
-                    className={`${getSizeInfo(table.typicalRecordCount).color} text-white hover:${getSizeInfo(table.typicalRecordCount).color} text-xs md:text-sm`}
+                    className={`${getSizeInfo(table.typicalRecordCount).color} text-white hover:${getSizeInfo(table.typicalRecordCount).color} text-xs md:text-sm px-1.5 md:px-2.5 py-0 md:py-0.5`}
                   >
                     {getSizeInfo(table.typicalRecordCount).label}
                   </Badge>
-                  <Badge variant="outline" className="text-gray-600 text-xs md:text-sm">
+                  <Badge variant="outline" className="text-gray-600 text-xs md:text-sm px-1.5 md:px-2.5 py-0 md:py-0.5">
                     <span className="hidden sm:inline">{table.typicalRecordCount} records</span>
                     <span className="sm:hidden">{table.typicalRecordCount}</span>
                   </Badge>

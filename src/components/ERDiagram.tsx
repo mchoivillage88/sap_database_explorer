@@ -179,10 +179,9 @@ export function ERDiagram({ table, relatedTables, allTables, onSelectTable }: ER
         </div>
       ) : (
         <svg
-          width="800"
-          height="500"
-          className="mx-auto"
-          style={{ maxWidth: '100%' }}
+          viewBox="0 0 800 500"
+          className="mx-auto w-full h-auto"
+          style={{ maxWidth: '100%', minHeight: '300px' }}
         >
           {/* Draw lines and relationship notation */}
           {table.relationships.map((rel, index) => {
