@@ -198,12 +198,14 @@ export default function App() {
                 {isMobileSidebarOpen ? <X className="size-6" /> : <Menu className="size-6" />}
               </Button>
             )}
-            <Database className="size-8 flex-shrink-0" />
+            <Database className="size-6 md:size-8 flex-shrink-0" />
             <div className="min-w-0">
-              <h1 className="text-white text-base md:text-xl truncate">SAP S/4HANA Database Explorer</h1>
-              <p className="text-xs md:text-sm text-blue-100 mt-1 hidden sm:block">
-                Interactive guide to key SAP ERP database tables and their relationships
-              </p>
+              <h1 className="text-white text-sm md:text-base lg:text-xl truncate">SAP S/4HANA Database Explorer</h1>
+              {!isMobile && (
+                <p className="text-xs md:text-sm text-blue-100 mt-1">
+                  Interactive guide to key SAP ERP database tables and their relationships
+                </p>
+              )}
             </div>
           </div>
           <div className="flex items-center gap-2">

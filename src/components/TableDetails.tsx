@@ -77,7 +77,7 @@ export function TableDetails({ table, allTables, onSelectTable }: TableDetailsPr
 
   return (
     <div className="h-full overflow-y-auto bg-white" ref={scrollContainerRef}>
-      {/* Header */}
+      {/* Header - Compact on mobile */}
       <div className="sticky top-0 bg-white border-b border-gray-200 p-4 md:p-6 shadow-sm z-10">
         <div className="flex items-start justify-between">
           <div className="flex-1 min-w-0">
@@ -99,16 +99,20 @@ export function TableDetails({ table, allTables, onSelectTable }: TableDetailsPr
                 </>
               )}
             </div>
-            {table.detailedDescription && (
-              <div className="mt-4 p-4 bg-blue-50 rounded-lg border border-blue-200">
-                <p className="text-sm text-blue-900 leading-relaxed">
-                  {table.detailedDescription}
-                </p>
-              </div>
-            )}
           </div>
         </div>
       </div>
+
+      {/* Detailed Description - Not sticky, scrolls with content */}
+      {table.detailedDescription && (
+        <div className="p-4 md:p-6 pb-0">
+          <div className="p-3 md:p-4 bg-blue-50 rounded-lg border border-blue-200">
+            <p className="text-xs md:text-sm text-blue-900 leading-relaxed">
+              {table.detailedDescription}
+            </p>
+          </div>
+        </div>
+      )}
 
       <div className="p-4 md:p-6 space-y-4 md:space-y-6">
         {/* Fields and Sample Records Section with Tabs */}
